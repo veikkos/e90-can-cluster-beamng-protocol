@@ -81,6 +81,7 @@ local DL_OILWARN      = 2 ^ 8    -- oil pressure warning
 local DL_BATTERY      = 2 ^ 9    -- battery warning
 local DL_ABS          = 2 ^ 10   -- abs active or switched off
 local DL_SPARE        = 2 ^ 11   -- N/A
+local DL_LOWBEAM      = 2 ^ 12    -- low beam
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -110,7 +111,7 @@ local function fillStruct(o, dtSim)
     o.dashLights = bit.bor(o.dashLights, DL_ABS    ) if electrics.values.absActive     ~= 0 then o.showLights = bit.bor(o.showLights, DL_ABS      ) end
   end
   o.dashLights = bit.bor(o.dashLights, DL_OILWARN  ) if electrics.values.oil           ~= 0 then o.showLights = bit.bor(o.showLights, DL_OILWARN  ) end
-  o.dashLights = bit.bor(o.dashLights, DL_BATTERY  ) if electrics.values.engineRunning == 0 then o.showLights = bit.bor(o.showLights, DL_BATTERY  ) end
+  o.dashLights = bit.bor(o.dashLights, DL_BATTERY  ) if electrics.values.engineRunning == 0 then on.showLights = bit.bor(o.showLights, DL_BATTERY  ) end
   if electrics.values.hasESC then
     o.dashLights = bit.bor(o.dashLights, DL_TC     ) if electrics.values.esc           ~= 0
                                                      or electrics.values.tcs           ~= 0 then o.showLights = bit.bor(o.showLights, DL_TC       ) end
@@ -118,6 +119,7 @@ local function fillStruct(o, dtSim)
   if hasShiftLights then
     o.dashLights = bit.bor(o.dashLights, DL_SHIFT  ) if electrics.values.shouldShift        then o.showLights = bit.bor(o.showLights, DL_SHIFT    ) end
   end
+  o.dashLights = bit.bor(o.dashLights, DL_LOWBEAM ) if electrics.values.lowbeam        ~= 0 then o.showLights = bit.bor(o.showLights, DL_LOWBEAM ) end
 
   o.throttle = electrics.values.throttle
   o.brake = electrics.values.brake
@@ -130,13 +132,15 @@ local function fillStruct(o, dtSim)
   local firstChar = string.sub(gearString, 1, 1)
 
   if firstChar == "M" then
-    o.gearMode = string.byte("M")
+    o.gearMode = string.byte("M") -- Semi automatic "Mn" mode
+  elseif firstChar == "P" then
+    o.gearMode = string.byte("P") -- Parking gear
   elseif firstChar == "S" then
-    o.gearMode = string.byte("S")
+    o.gearMode = string.byte("S") -- Automatic "Sn" sport mode
   elseif tonumber(firstChar) ~= nil then
-    o.gearMode = string.byte("I")
+    o.gearMode = string.byte("C") -- Common
   else
-    o.gearMode = string.byte("A")
+    o.gearMode = string.byte("A") -- Automatic
   end
 end
 

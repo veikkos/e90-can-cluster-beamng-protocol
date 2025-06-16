@@ -84,6 +84,7 @@ local DL_SPARE        = 2 ^ 11   -- N/A
 local DL_LOWBEAM      = 2 ^ 12   -- low beam
 local DL_ESC          = 2 ^ 13   -- esc active or switched off
 local DL_CHECKENGINE  = 2 ^ 14   -- check engine
+local DL_CLUTCHTEMP   = 2 ^ 15   -- clutch temp
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -129,6 +130,16 @@ local function fillStruct(o, dtSim)
   end
 
   o.dashLights = bit.bor(o.dashLights, DL_CHECKENGINE ) if electrics.values.checkengine == true then o.showLights = bit.bor(o.showLights, DL_CHECKENGINE ) end
+
+  if powertrain then
+    local clutch = powertrain.getDevice("clutch")
+    if clutch and clutch.clutchTemperature and clutch.clutchWarningTemp then
+      o.dashLights = bit.bor(o.dashLights, DL_CLUTCHTEMP)
+      if clutch.clutchTemperature >= clutch.clutchWarningTemp then
+        o.showLights = bit.bor(o.showLights, DL_CLUTCHTEMP)
+      end
+    end
+  end
 
   o.throttle = electrics.values.throttle
   o.brake = electrics.values.brake

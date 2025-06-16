@@ -83,6 +83,7 @@ local DL_ABS          = 2 ^ 10   -- abs active or switched off
 local DL_SPARE        = 2 ^ 11   -- N/A
 local DL_LOWBEAM      = 2 ^ 12   -- low beam
 local DL_ESC          = 2 ^ 13   -- esc active or switched off
+local DL_CHECKENGINE  = 2 ^ 14   -- check engine
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -126,6 +127,8 @@ local function fillStruct(o, dtSim)
   if electrics.values.hasESC then
     o.dashLights = bit.bor(o.dashLights, DL_ESC ) if electrics.values.esc ~= 0 then o.showLights = bit.bor(o.showLights, DL_ESC ) end
   end
+
+  o.dashLights = bit.bor(o.dashLights, DL_CHECKENGINE ) if electrics.values.checkengine == true then o.showLights = bit.bor(o.showLights, DL_CHECKENGINE ) end
 
   o.throttle = electrics.values.throttle
   o.brake = electrics.values.brake

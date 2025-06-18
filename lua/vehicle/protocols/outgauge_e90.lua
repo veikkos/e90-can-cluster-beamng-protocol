@@ -52,6 +52,8 @@ local function getStructDefinition()
     char           display2[16];    // Usually Settings // N/A, hardcoded to ""
     int            id;              // optional - only if OutGauge ID is specified
     char           gearExt;         // TBA
+    float          cruiseSpeed;     // M/S
+    unsigned       cruiseMode;      // Inactive:0, Active:1
   ]]
 end
 
@@ -162,6 +164,11 @@ local function fillStruct(o, dtSim)
   else
     o.gearExt = string.byte("A") -- Automatic
   end
+
+  o.cruiseSpeed = electrics.values.cruiseControlTarget or 0
+  o.cruiseMode = electrics.values.cruiseControlActive == nil and 0
+    or electrics.values.cruiseControlActive == 0 and 0
+    or 1
 end
 
 M.init = init

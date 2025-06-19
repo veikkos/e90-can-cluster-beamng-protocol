@@ -54,6 +54,7 @@ local function getStructDefinition()
     char           gearExt;         // M = semi-automatic, S = sport mode, P = park, A = automatic, C = common
     float          cruiseSpeed;     // M/S
     unsigned       cruiseMode;      // Inactive:0, Active:1
+    float          fuelCapacity;    // L
   ]]
 end
 
@@ -88,6 +89,7 @@ local DL_ESC          = 2 ^ 13   -- esc active or switched off
 local DL_CHECKENGINE  = 2 ^ 14   -- check engine
 local DL_CLUTCHTEMP   = 2 ^ 15   -- clutch temp
 local DL_FOGLIGHTS    = 2 ^ 16   -- fog lights
+local DL_BRAKETEMP    = 2 ^ 17   -- brake temp
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -171,6 +173,29 @@ local function fillStruct(o, dtSim)
   o.cruiseMode = electrics.values.cruiseControlActive == nil and 0
     or electrics.values.cruiseControlActive == 0 and 0
     or 1
+
+  o.fuelCapacity = electrics.values.fuelCapacity
+
+  local brakeOverheat = false
+  local wheelNames = {}
+
+  if wheels and wheels.wheels then
+    for i, wheel in ipairs(wheels.wheels) do
+      if wheel.name then
+        table.insert(wheelNames, wheel.name)
+      end
+    end
+  end
+
+  for _, name in ipairs(wheelNames) do
+    local damage = damageTracker.getDamage("wheels", "brakeOverHeat" .. name)
+    if (type(damage) == "number" and damage > 0) or (type(damage) == "boolean" and damage) then
+      brakeOverheat = true
+      break
+    end
+  end
+
+  o.dashLights = bit.bor(o.dashLights, DL_BRAKETEMP ) if brakeOverheat == true then o.showLights = bit.bor(o.showLights, DL_BRAKETEMP ) end
 end
 
 M.init = init

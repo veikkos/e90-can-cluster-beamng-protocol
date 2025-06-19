@@ -51,7 +51,7 @@ local function getStructDefinition()
     char           display1[16];    // Usually Fuel // N/A, hardcoded to ""
     char           display2[16];    // Usually Settings // N/A, hardcoded to ""
     int            id;              // optional - only if OutGauge ID is specified
-    char           gearExt;         // TBA
+    char           gearExt;         // M = semi-automatic, S = sport mode, P = park, A = automatic, C = common
     float          cruiseSpeed;     // M/S
     unsigned       cruiseMode;      // Inactive:0, Active:1
   ]]
@@ -87,6 +87,7 @@ local DL_LOWBEAM      = 2 ^ 12   -- low beam
 local DL_ESC          = 2 ^ 13   -- esc active or switched off
 local DL_CHECKENGINE  = 2 ^ 14   -- check engine
 local DL_CLUTCHTEMP   = 2 ^ 15   -- clutch temp
+local DL_FOGLIGHTS    = 2 ^ 16   -- fog lights
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -132,6 +133,7 @@ local function fillStruct(o, dtSim)
   end
 
   o.dashLights = bit.bor(o.dashLights, DL_CHECKENGINE ) if electrics.values.checkengine == true then o.showLights = bit.bor(o.showLights, DL_CHECKENGINE ) end
+  o.dashLights = bit.bor(o.dashLights, DL_FOGLIGHTS ) if electrics.values.fog ~= 0 then o.showLights = bit.bor(o.showLights, DL_FOGLIGHTS ) end
 
   if powertrain then
     local clutch = powertrain.getDevice("clutch")

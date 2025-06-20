@@ -90,6 +90,10 @@ local DL_CHECKENGINE  = 2 ^ 14   -- check engine
 local DL_CLUTCHTEMP   = 2 ^ 15   -- clutch temp
 local DL_FOGLIGHTS    = 2 ^ 16   -- fog lights
 local DL_BRAKETEMP    = 2 ^ 17   -- brake temp
+local DL_TIREFLAT_FL  = 2 ^ 18   -- front left tire deflated
+local DL_TIREFLAT_FR  = 2 ^ 19   -- front right tire deflated
+local DL_TIREFLAT_RL  = 2 ^ 20   -- rear left tire deflated
+local DL_TIREFLAT_RR  = 2 ^ 21   -- rear right tire deflated
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -178,11 +182,23 @@ local function fillStruct(o, dtSim)
 
   local brakeOverheat = false
   local wheelNames = {}
+  local tireFlatBits = {
+    FL = DL_TIREFLAT_FL,
+    FR = DL_TIREFLAT_FR,
+    RL = DL_TIREFLAT_RL,
+    RR = DL_TIREFLAT_RR
+  }
 
-  if wheels and wheels.wheels then
-    for i, wheel in ipairs(wheels.wheels) do
-      if wheel.name then
-        table.insert(wheelNames, wheel.name)
+  for i, wheel in pairs(wheels.wheels) do
+    if wheel and wheel.name then
+      table.insert(wheelNames, wheel.name)
+
+      local bitFlag = tireFlatBits[wheel.name]
+      if bitFlag then
+        o.dashLights = bit.bor(o.dashLights, bitFlag)
+        if wheel.isTireDeflated then
+          o.showLights = bit.bor(o.showLights, bitFlag)
+        end
       end
     end
   end

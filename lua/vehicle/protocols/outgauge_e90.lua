@@ -94,6 +94,7 @@ local DL_TIREFLAT_FL  = 2 ^ 18   -- front left tire deflated
 local DL_TIREFLAT_FR  = 2 ^ 19   -- front right tire deflated
 local DL_TIREFLAT_RL  = 2 ^ 20   -- rear left tire deflated
 local DL_TIREFLAT_RR  = 2 ^ 21   -- rear right tire deflated
+local DL_RADIATOR     = 2 ^ 22   -- radiator warning
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -212,6 +213,11 @@ local function fillStruct(o, dtSim)
   end
 
   o.dashLights = bit.bor(o.dashLights, DL_BRAKETEMP ) if brakeOverheat == true then o.showLights = bit.bor(o.showLights, DL_BRAKETEMP ) end
+
+  o.dashLights = bit.bor(o.dashLights, DL_RADIATOR)
+  if (damageTracker.getDamage("engine", "radiatorLeak") == true) then
+    o.showLights = bit.bor(o.showLights, DL_RADIATOR)
+  end
 end
 
 M.init = init

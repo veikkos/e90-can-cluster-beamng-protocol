@@ -55,6 +55,7 @@ local function getStructDefinition()
     float          cruiseSpeed;     // M/S
     unsigned       cruiseMode;      // Inactive:0, Active:1
     float          fuelCapacity;    // L
+    unsigned short ignitionState;   // Off:0, Accessory:1, On:2, Starter:3
   ]]
 end
 
@@ -97,7 +98,6 @@ local DL_TIREFLAT_RR  = 2 ^ 21   -- rear right tire deflated
 local DL_RADIATOR     = 2 ^ 22   -- radiator warning
 local DL_ENGINETEMP_Y = 2 ^ 23   -- engine temp yellow
 local DL_ENGINETEMP_R = 2 ^ 24   -- engine temp red
-local DL_IGNITION     = 2 ^ 25   -- ignition
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -224,7 +224,8 @@ local function fillStruct(o, dtSim)
 
   o.dashLights = bit.bor(o.dashLights, DL_ENGINETEMP_Y ) if electrics.values.watertemp > 105 then o.showLights = bit.bor(o.showLights, DL_ENGINETEMP_Y ) end
   o.dashLights = bit.bor(o.dashLights, DL_ENGINETEMP_R ) if electrics.values.watertemp > 120 then o.showLights = bit.bor(o.showLights, DL_ENGINETEMP_R ) end
-  o.dashLights = bit.bor(o.dashLights, DL_IGNITION ) if electrics.values.ignition == true then o.showLights = bit.bor(o.showLights, DL_IGNITION ) end
+
+  o.ignitionState = electrics.values.ignitionLevel
 end
 
 M.init = init

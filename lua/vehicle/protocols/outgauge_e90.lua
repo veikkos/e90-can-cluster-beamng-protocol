@@ -95,6 +95,8 @@ local DL_TIREFLAT_FR  = 2 ^ 19   -- front right tire deflated
 local DL_TIREFLAT_RL  = 2 ^ 20   -- rear left tire deflated
 local DL_TIREFLAT_RR  = 2 ^ 21   -- rear right tire deflated
 local DL_RADIATOR     = 2 ^ 22   -- radiator warning
+local DL_ENGINETEMP_Y = 2 ^ 23   -- engine temp yellow
+local DL_ENGINETEMP_R = 2 ^ 24   -- engine temp red
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -218,6 +220,9 @@ local function fillStruct(o, dtSim)
   if (damageTracker.getDamage("engine", "radiatorLeak") == true) then
     o.showLights = bit.bor(o.showLights, DL_RADIATOR)
   end
+
+  o.dashLights = bit.bor(o.dashLights, DL_ENGINETEMP_Y ) if electrics.values.watertemp > 105 then o.showLights = bit.bor(o.showLights, DL_ENGINETEMP_Y ) end
+  o.dashLights = bit.bor(o.dashLights, DL_ENGINETEMP_R ) if electrics.values.watertemp > 120 then o.showLights = bit.bor(o.showLights, DL_ENGINETEMP_R ) end
 end
 
 M.init = init

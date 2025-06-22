@@ -169,7 +169,7 @@ local function fillStruct(o, dtSim)
   elseif firstChar == "S" then
     o.gearExt = string.byte("S") -- Automatic "Sn" sport mode
   elseif tonumber(firstChar) ~= nil then
-    o.gearExt = string.byte("C") -- Common
+    o.gearExt = string.byte("N") -- None
   else
     o.gearExt = string.byte("A") -- Automatic
   end

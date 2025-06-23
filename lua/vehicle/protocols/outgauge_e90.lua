@@ -99,6 +99,10 @@ local DL_TIREFLAT_RR  = 2 ^ 21   -- rear right tire deflated
 local DL_RADIATOR     = 2 ^ 22   -- radiator warning
 local DL_ENGINETEMP_Y = 2 ^ 23   -- engine temp yellow
 local DL_ENGINETEMP_R = 2 ^ 24   -- engine temp red
+local DL_DOOROPEN_FL  = 2 ^ 25   -- front left door open
+local DL_DOOROPEN_FR  = 2 ^ 26   -- front right door open
+local DL_DOOROPEN_RL  = 2 ^ 27   -- rear left door open
+local DL_DOOROPEN_RR  = 2 ^ 28   -- rear right door open
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -228,6 +232,23 @@ local function fillStruct(o, dtSim)
 
   o.ignitionState = electrics.values.ignitionLevel
   o.engineState = electrics.values.engineRunning
+
+  local doorLights = {
+    { name = "door_FL_coupler_notAttached", flag = DL_DOOROPEN_FL },
+    { name = "door_FR_coupler_notAttached", flag = DL_DOOROPEN_FR },
+    { name = "door_RL_coupler_notAttached", flag = DL_DOOROPEN_RL },
+    { name = "door_RR_coupler_notAttached", flag = DL_DOOROPEN_RR },
+  }
+
+  for _, door in ipairs(doorLights) do
+    local val = electrics.values[door.name]
+    if val ~= nil then
+      o.dashLights = bit.bor(o.dashLights, door.flag)
+        if val ~= 0 then
+          o.showLights = bit.bor(o.showLights, door.flag)
+        end
+      end
+  end
 end
 
 M.init = init

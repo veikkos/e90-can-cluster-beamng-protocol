@@ -132,7 +132,6 @@ local function fillStruct(o, dtSim)
     o.dashLights = bit.bor(o.dashLights, DL_ABS    ) if electrics.values.absActive     ~= 0 then o.showLights = bit.bor(o.showLights, DL_ABS      ) end
   end
   o.dashLights = bit.bor(o.dashLights, DL_OILWARN  ) if electrics.values.oil           ~= 0 then o.showLights = bit.bor(o.showLights, DL_OILWARN  ) end
-  o.dashLights = bit.bor(o.dashLights, DL_BATTERY  ) if electrics.values.engineRunning == 0 then o.showLights = bit.bor(o.showLights, DL_BATTERY  ) end
 
   if electrics.values.hasTCS then
     o.dashLights = bit.bor(o.dashLights, DL_TC ) if electrics.values.tcs ~= 0 then o.showLights = bit.bor(o.showLights, DL_TC ) end

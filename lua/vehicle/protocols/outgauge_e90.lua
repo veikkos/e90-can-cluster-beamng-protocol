@@ -114,7 +114,7 @@ local function fillStruct(o, dtSim)
   o.rpm = electrics.values.rpm or 0
   o.turbo = (electrics.values.turboBoost or 0) / 14.504
   o.engTemp = electrics.values.watertemp or 0
-  o.fuel = electrics.values.fuel or 0
+  o.fuel = (electrics.values.fuelCapacity and electrics.values.fuelVolume / electrics.values.fuelCapacity) or 0
   o.oilPressure = 0 -- TODO
   o.oilTemp = electrics.values.oiltemp or 0
 

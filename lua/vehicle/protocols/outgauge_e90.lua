@@ -103,6 +103,7 @@ local DL_DOOROPEN_FL  = 2 ^ 25   -- front left door open
 local DL_DOOROPEN_FR  = 2 ^ 26   -- front right door open
 local DL_DOOROPEN_RL  = 2 ^ 27   -- rear left door open
 local DL_DOOROPEN_RR  = 2 ^ 28   -- rear right door open
+local DL_TAILGATEOPEN = 2 ^ 29   -- tailgate open
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -237,6 +238,7 @@ local function fillStruct(o, dtSim)
     { name = "door_FR_coupler_notAttached", flag = DL_DOOROPEN_FR },
     { name = "door_RL_coupler_notAttached", flag = DL_DOOROPEN_RL },
     { name = "door_RR_coupler_notAttached", flag = DL_DOOROPEN_RR },
+    { name = "tailgateCoupler_notAttached", flag = DL_TAILGATEOPEN },
   }
 
   for _, door in ipairs(doorLights) do

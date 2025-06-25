@@ -234,11 +234,17 @@ local function fillStruct(o, dtSim)
   o.engineState = electrics.values.engineRunning
 
   local doorLights = {
+    -- 4-5 door models
     { name = "door_FL_coupler_notAttached", flag = DL_DOOROPEN_FL },
     { name = "door_FR_coupler_notAttached", flag = DL_DOOROPEN_FR },
     { name = "door_RL_coupler_notAttached", flag = DL_DOOROPEN_RL },
     { name = "door_RR_coupler_notAttached", flag = DL_DOOROPEN_RR },
+    -- 2 door models
+    { name = "door_L_coupler_notAttached", flag = DL_DOOROPEN_FL },
+    { name = "door_R_coupler_notAttached", flag = DL_DOOROPEN_FR },
+    -- tailgates and trunks
     { name = "tailgateCoupler_notAttached", flag = DL_TAILGATEOPEN },
+    { name = "trunkCoupler_notAttached", flag = DL_TAILGATEOPEN },
   }
 
   for _, door in ipairs(doorLights) do

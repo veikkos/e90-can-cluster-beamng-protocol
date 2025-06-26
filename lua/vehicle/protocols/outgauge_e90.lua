@@ -1,3 +1,7 @@
+-- veikkos: This file used to be a copy-paste from the original Outgauge protocol implementation, but has been modified to suit the needs of
+-- the e90 CAN bus cluster proxy.
+
+-- Original license:
 -- This Source Code Form is subject to the terms of the bCDDL, v. 1.1.
 -- If a copy of the bCDDL was not distributed with this
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
@@ -6,7 +10,6 @@
 -- For information on how to implement and distribute your custom UDP protocol, please check https://go.beamng.com/protocols --
 -- ========================================================================================================================= --
 
--- generic outgauge implementation based on LiveForSpeed
 local M = {}
 
 local hasShiftLights = false
@@ -28,9 +31,6 @@ end
 local function getStructDefinition()
   -- the original protocol documentation can be found at LFS/docs/InSim.txt
   return [[
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////// IMPORTANT: if you modify this definition, also update the docs at https://go.beamng.com/protocols /////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     unsigned       time;            // time in milliseconds (to check order) // N/A, hardcoded to 0
     char           car[4];          // Car name // N/A, fixed value of "beam"
     unsigned short flags;           // Info (see OG_x below)
@@ -60,9 +60,6 @@ local function getStructDefinition()
   ]]
 end
 
---//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
---////// IMPORTANT: if you modify this definition, also update the docs at https://go.beamng.com/protocols /////////
---//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 -- OG_x - bits for flags
 local OG_SHIFT =     1  -- key // N/A
 local OG_CTRL  =     2  -- key // N/A
@@ -70,9 +67,6 @@ local OG_TURBO =  8192  -- show turbo gauge
 local OG_KM    = 16384  -- if not set - user prefers MILES
 local OG_BAR   = 32768  -- if not set - user prefers PSI
 
---//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
---////// IMPORTANT: if you modify this definition, also update the docs at https://go.beamng.com/protocols /////////
---//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 -- DL_x - bits for dashLights and showLights
 local DL_SHIFT        = 2 ^ 0    -- shift light
 local DL_FULLBEAM     = 2 ^ 1    -- full beam

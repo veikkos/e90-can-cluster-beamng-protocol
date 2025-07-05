@@ -20,7 +20,7 @@ end
 
 local function reset() end
 local function getAddress()        return settings.getValue("protocols_outgauge_address") end        -- return "127.0.0.1"
-local function getPort()           return 4568 end           -- return 4567
+local function getPort()           return 4568 end
 local function getMaxUpdateRate()  return settings.getValue("protocols_outgauge_maxUpdateRate") end  -- return 60
 
 local function isPhysicsStepUsed()
@@ -51,7 +51,7 @@ local function getStructDefinition()
     char           display1[16];    // Usually Fuel // N/A, hardcoded to ""
     char           display2[16];    // Usually Settings // N/A, hardcoded to ""
     int            id;              // optional - only if OutGauge ID is specified
-    char           gearExt;         // M = semi-automatic, S = sport mode, P = park, A = automatic, C = common
+    char           gearExt;         // 'M' = semi-automatic, 'S' = sport mode, 'P' = park, 'A' = automatic, 'N' = none
     float          cruiseSpeed;     // M/S
     unsigned       cruiseMode;      // Inactive:0, Active:1
     float          fuelCapacity;    // L

@@ -78,16 +78,16 @@ local DL_SHIFT        = 2 ^ 0    -- shift light
 local DL_FULLBEAM     = 2 ^ 1    -- full beam
 local DL_HANDBRAKE    = 2 ^ 2    -- handbrake
 local DL_PITSPEED     = 2 ^ 3    -- pit speed limiter // N/A
-local DL_TC           = 2 ^ 4    -- tc active or switched off
+local DL_TC           = 2 ^ 4    -- tc active
 local DL_SIGNAL_L     = 2 ^ 5    -- left turn signal
 local DL_SIGNAL_R     = 2 ^ 6    -- right turn signal
 local DL_SIGNAL_ANY   = 2 ^ 7    -- shared turn signal // N/A
 local DL_OILWARN      = 2 ^ 8    -- oil pressure warning
 local DL_BATTERY      = 2 ^ 9    -- battery warning
 local DL_ABS          = 2 ^ 10   -- abs active or switched off
-local DL_SPARE        = 2 ^ 11   -- N/A
+local DL_BEACON       = 2 ^ 11   -- beacon light
 local DL_LOWBEAM      = 2 ^ 12   -- low beam
-local DL_ESC          = 2 ^ 13   -- esc active or switched off
+local DL_ESC          = 2 ^ 13   -- esc active
 local DL_CHECKENGINE  = 2 ^ 14   -- check engine
 local DL_CLUTCHTEMP   = 2 ^ 15   -- clutch temp
 local DL_FOGLIGHTS    = 2 ^ 16   -- fog lights
@@ -104,6 +104,8 @@ local DL_DOOROPEN_FR  = 2 ^ 26   -- front right door open
 local DL_DOOROPEN_RL  = 2 ^ 27   -- rear left door open
 local DL_DOOROPEN_RR  = 2 ^ 28   -- rear right door open
 local DL_TAILGATEOPEN = 2 ^ 29   -- tailgate open
+local DL_TC_DISABLED  = 2 ^ 30   -- tc switched off
+local DL_ESC_DISABLED = 2 ^ 31   -- esc switched off
 
 local function fillStruct(o, dtSim)
   if not electrics.values.watertemp then
@@ -135,7 +137,8 @@ local function fillStruct(o, dtSim)
   o.dashLights = bit.bor(o.dashLights, DL_OILWARN  ) if electrics.values.oil           ~= 0 then o.showLights = bit.bor(o.showLights, DL_OILWARN  ) end
 
   if electrics.values.hasTCS then
-    o.dashLights = bit.bor(o.dashLights, DL_TC ) if electrics.values.tcs ~= 0 then o.showLights = bit.bor(o.showLights, DL_TC ) end
+    o.dashLights = bit.bor(o.dashLights, DL_TC ) if electrics.values.tcs ~= 0 and electrics.values.tcsActive == true then o.showLights = bit.bor(o.showLights, DL_TC ) end
+    o.dashLights = bit.bor(o.dashLights, DL_TC_DISABLED ) if electrics.values.tcs ~= 0 and electrics.values.tcsActive == false then o.showLights = bit.bor(o.showLights, DL_TC_DISABLED ) end
   end
 
   if hasShiftLights then
@@ -144,7 +147,8 @@ local function fillStruct(o, dtSim)
   o.dashLights = bit.bor(o.dashLights, DL_LOWBEAM ) if electrics.values.lowbeam        ~= 0 then o.showLights = bit.bor(o.showLights, DL_LOWBEAM  ) end
 
   if electrics.values.hasESC then
-    o.dashLights = bit.bor(o.dashLights, DL_ESC ) if electrics.values.esc ~= 0 then o.showLights = bit.bor(o.showLights, DL_ESC ) end
+    o.dashLights = bit.bor(o.dashLights, DL_ESC ) if electrics.values.esc ~= 0 and electrics.values.escActive == true then o.showLights = bit.bor(o.showLights, DL_ESC ) end
+    o.dashLights = bit.bor(o.dashLights, DL_ESC_DISABLED ) if electrics.values.esc ~= 0 and electrics.values.escActive == false then o.showLights = bit.bor(o.showLights, DL_ESC_DISABLED ) end
   end
 
   o.dashLights = bit.bor(o.dashLights, DL_CHECKENGINE ) if electrics.values.checkengine == true then o.showLights = bit.bor(o.showLights, DL_CHECKENGINE ) end

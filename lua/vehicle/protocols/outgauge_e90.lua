@@ -228,6 +228,10 @@ local function fillStruct(o, dtSim)
   o.dashLights = bit.bor(o.dashLights, DL_ENGINETEMP_Y ) if electrics.values.watertemp > 105 then o.showLights = bit.bor(o.showLights, DL_ENGINETEMP_Y ) end
   o.dashLights = bit.bor(o.dashLights, DL_ENGINETEMP_R ) if electrics.values.watertemp > 120 then o.showLights = bit.bor(o.showLights, DL_ENGINETEMP_R ) end
 
+  if electrics.values.lightbar then
+    o.dashLights = bit.bor(o.dashLights, DL_BEACON) if electrics.values.lightbar ~= 0 then o.showLights = bit.bor(o.showLights, DL_BEACON) end
+  end
+
   o.ignitionState = electrics.values.ignitionLevel
   o.engineState = electrics.values.engineRunning
 

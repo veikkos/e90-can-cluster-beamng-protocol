@@ -128,7 +128,10 @@ local function fillStruct(o, dtSim)
   if electrics.values.hasABS then
     o.dashLights = bit.bor(o.dashLights, DL_ABS    ) if electrics.values.absActive     ~= 0 then o.showLights = bit.bor(o.showLights, DL_ABS      ) end
   end
-  o.dashLights = bit.bor(o.dashLights, DL_OILWARN  ) if electrics.values.oil           ~= 0 then o.showLights = bit.bor(o.showLights, DL_OILWARN  ) end
+  o.dashLights = bit.bor(o.dashLights, DL_OILWARN  )
+  if (damageTracker.getDamage("engine", "starvedOfOil") == true) then
+    o.showLights = bit.bor(o.showLights, DL_OILWARN)
+  end
 
   if electrics.values.hasTCS then
     o.dashLights = bit.bor(o.dashLights, DL_TC ) if electrics.values.tcs ~= 0 and electrics.values.tcsActive == true then o.showLights = bit.bor(o.showLights, DL_TC ) end
@@ -225,8 +228,15 @@ local function fillStruct(o, dtSim)
     o.showLights = bit.bor(o.showLights, DL_RADIATOR)
   end
 
-  o.dashLights = bit.bor(o.dashLights, DL_ENGINETEMP_Y ) if electrics.values.watertemp > 105 then o.showLights = bit.bor(o.showLights, DL_ENGINETEMP_Y ) end
-  o.dashLights = bit.bor(o.dashLights, DL_ENGINETEMP_R ) if electrics.values.watertemp > 120 then o.showLights = bit.bor(o.showLights, DL_ENGINETEMP_R ) end
+  o.dashLights = bit.bor(o.dashLights, DL_ENGINETEMP_Y )
+  if (damageTracker.getDamage("engine", "coolantOverheating") == true) then
+    o.showLights = bit.bor(o.showLights, DL_ENGINETEMP_Y)
+  end
+
+  o.dashLights = bit.bor(o.dashLights, DL_ENGINETEMP_R )
+  if (damageTracker.getDamage("engine", "oilOverheating") == true) then
+    o.showLights = bit.bor(o.showLights, DL_ENGINETEMP_R)
+  end
 
   if electrics.values.lightbar then
     o.dashLights = bit.bor(o.dashLights, DL_BEACON) if electrics.values.lightbar ~= 0 then o.showLights = bit.bor(o.showLights, DL_BEACON) end

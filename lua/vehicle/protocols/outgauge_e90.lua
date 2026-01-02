@@ -188,6 +188,36 @@ local function fillStruct(o, dtSim)
     or electrics.values.cruiseControlActive == 0 and 0
     or 1
 
+  -- Check if ACC values are present with custom version of "driver_assistance_angelo234" mod
+  -- See https://github.com/veikkos/driver_assistance_angelo234
+  local accTargetSpeed = electrics.values.accTargetSpeed
+
+  if accTargetSpeed then
+    local accFollowingTime = electrics.values.accFollowingTime
+    local accHasVehicleAhead = electrics.values.accHasVehicleAhead
+    local accDistanceToFront = electrics.values.accDistanceToFront
+
+    -- Override cruise control values with ACC data
+    o.cruiseSpeed = accTargetSpeed
+
+    -- Pack ACC data into cruiseMode:
+    -- Bit 0: Active (1)
+    -- Bit 1: Has vehicle ahead
+    -- Bits 2-4: Following time (0.5s->1, 1.0-1.5s->2, 2.0-2.5s->3, 3.0s->4)
+    local followingTimeCode
+    if accFollowingTime <= 0.5 then
+      followingTimeCode = 1
+    elseif accFollowingTime <= 1.5 then
+      followingTimeCode = 2
+    elseif accFollowingTime <= 2.5 then
+      followingTimeCode = 3
+    else
+      followingTimeCode = 4
+    end
+
+    o.cruiseMode = 1 + (accHasVehicleAhead * 2) + (followingTimeCode * 4)
+  end
+
   o.fuelCapacity = electrics.values.fuelCapacity
 
   local brakeOverheat = false

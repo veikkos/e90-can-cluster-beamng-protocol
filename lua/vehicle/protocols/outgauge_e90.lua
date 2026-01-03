@@ -195,7 +195,6 @@ local function fillStruct(o, dtSim)
   if accTargetSpeed then
     local accFollowingTime = electrics.values.accFollowingTime
     local accHasVehicleAhead = electrics.values.accHasVehicleAhead
-    local accDistanceToFront = electrics.values.accDistanceToFront
 
     -- Override cruise control values with ACC data
     o.cruiseSpeed = accTargetSpeed
@@ -203,7 +202,7 @@ local function fillStruct(o, dtSim)
     -- Pack ACC data into cruiseMode:
     -- Bit 0: Active (1)
     -- Bit 1: Has vehicle ahead
-    -- Bits 2-4: Following time (0.5s->1, 1.0-1.5s->2, 2.0-2.5s->3, 3.0s->4)
+    -- Bits 3-5: Following time (0.5s->1, 1.0-1.5s->2, 2.0-2.5s->3, 3.0s->4)
     local followingTimeCode
     if accFollowingTime <= 0.5 then
       followingTimeCode = 1
@@ -215,7 +214,13 @@ local function fillStruct(o, dtSim)
       followingTimeCode = 4
     end
 
-    o.cruiseMode = 1 + (accHasVehicleAhead * 2) + (followingTimeCode * 4)
+    o.cruiseMode = 1 + (accHasVehicleAhead * 2) + (followingTimeCode * 8)
+  end
+
+  -- Add collision warning bit (Bit 2) if present
+  local collisionWarning = electrics.values.collisionWarning
+  if collisionWarning and collisionWarning ~= 0 then
+    o.cruiseMode = o.cruiseMode + 4
   end
 
   o.fuelCapacity = electrics.values.fuelCapacity

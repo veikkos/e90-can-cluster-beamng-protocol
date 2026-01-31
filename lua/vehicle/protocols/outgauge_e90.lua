@@ -57,6 +57,7 @@ local function getStructDefinition()
     float          fuelCapacity;    // L
     unsigned short ignitionState;   // Off:0, Accessory:1, On:2, Starter:3
     unsigned short engineState;     // Off:0, Running:1
+    float          envTemp;         // C * 10
   ]]
 end
 
@@ -279,6 +280,12 @@ local function fillStruct(o, dtSim)
 
   o.ignitionState = electrics.values.ignitionLevel
   o.engineState = electrics.values.engineRunning
+
+  if obj and obj.getEnvTemperature then
+    o.envTemp = (obj:getEnvTemperature() - 273.15)
+  else
+    o.envTemp = 20
+  end
 
   local doorLights = {
     -- 4-5 door models

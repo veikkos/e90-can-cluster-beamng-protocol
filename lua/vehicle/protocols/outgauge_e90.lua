@@ -135,8 +135,8 @@ local function fillStruct(o, dtSim)
   end
 
   if electrics.values.hasTCS then
-    o.dashLights = bit.bor(o.dashLights, DL_TC ) if electrics.values.tcs ~= 0 and electrics.values.tcsActive == true then o.showLights = bit.bor(o.showLights, DL_TC ) end
-    o.dashLights = bit.bor(o.dashLights, DL_TC_DISABLED ) if electrics.values.tcs ~= 0 and electrics.values.tcsActive == false then o.showLights = bit.bor(o.showLights, DL_TC_DISABLED ) end
+    o.dashLights = bit.bor(o.dashLights, DL_TC ) if electrics.values.tcs ~= 0 and (electrics.values.tcsActive == true or electrics.values.tcsActive == 1) then o.showLights = bit.bor(o.showLights, DL_TC ) end
+    o.dashLights = bit.bor(o.dashLights, DL_TC_DISABLED ) if electrics.values.tcs ~= 0 and (electrics.values.tcsActive == false or electrics.values.tcsActive == 0) then o.showLights = bit.bor(o.showLights, DL_TC_DISABLED ) end
   end
 
   if hasShiftLights then
@@ -145,8 +145,8 @@ local function fillStruct(o, dtSim)
   o.dashLights = bit.bor(o.dashLights, DL_LOWBEAM ) if electrics.values.lowbeam        ~= 0 then o.showLights = bit.bor(o.showLights, DL_LOWBEAM  ) end
 
   if electrics.values.hasESC then
-    o.dashLights = bit.bor(o.dashLights, DL_ESC ) if electrics.values.esc ~= 0 and electrics.values.escActive == true then o.showLights = bit.bor(o.showLights, DL_ESC ) end
-    o.dashLights = bit.bor(o.dashLights, DL_ESC_DISABLED ) if electrics.values.esc ~= 0 and electrics.values.escActive == false then o.showLights = bit.bor(o.showLights, DL_ESC_DISABLED ) end
+    o.dashLights = bit.bor(o.dashLights, DL_ESC ) if electrics.values.esc ~= 0 and (electrics.values.escActive == true or electrics.values.escActive == 1) then o.showLights = bit.bor(o.showLights, DL_ESC ) end
+    o.dashLights = bit.bor(o.dashLights, DL_ESC_DISABLED ) if electrics.values.esc ~= 0 and (electrics.values.escActive == false or electrics.values.escActive == 0) then o.showLights = bit.bor(o.showLights, DL_ESC_DISABLED ) end
   end
 
   o.dashLights = bit.bor(o.dashLights, DL_CHECKENGINE ) if electrics.values.checkengine == true then o.showLights = bit.bor(o.showLights, DL_CHECKENGINE ) end
